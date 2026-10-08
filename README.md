@@ -1,6 +1,6 @@
 # Enterprise Ticket Transformer
 
-This repository teaches ticket classification by adding one idea at a time. V1–V7 are executable model generations; V8 is an API with a Dockerfile that serves a selected local model artifact. The included tickets are synthetic teaching examples, not evidence of enterprise performance. Read [why each generation exists](docs/generations.md) alongside the code. The project is licensed under [MIT](LICENSE).
+This repository teaches ticket classification by adding one idea at a time. **Lecture 1 is implemented:** V1–V7 are executable model generations; V8 is an API with a Dockerfile that serves a selected local model artifact. **Lecture 2 is planned:** it will add language-model components and a human-reviewed support-response draft workflow. The included tickets are synthetic teaching examples, not evidence of enterprise performance. Read [why each generation exists](docs/generations.md) alongside the code. The project is licensed under [MIT](LICENSE).
 
 | Version | Implementation | What it adds |
 | --- | --- | --- |
@@ -14,6 +14,30 @@ This repository teaches ticket classification by adding one idea at a time. V1�
 | V8 | FastAPI + Docker | Model loading, input validation, API key, health check |
 
 The scratch neural stages use [PyTorch's LSTM](https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html) for V3/V4 and explicit Q/K/V projections in `src/transformer/attention.py` for V5. V6/V7 use the small [bert-tiny model](https://huggingface.co/prajjwal1/bert-tiny) by default. It is an educational choice; select and approve a model separately for enterprise use.
+
+## Lecture paths and repository layout
+
+- [Lecture 1: Transformers and ticket classification](docs/lecture_01_transformers/README.md) covers tokenization → embeddings → Word2Vec → LSTM → attention → Transformer encoder, then model evaluation and serving.
+- [Lecture 2: Large Language Models](docs/lecture_02_llm/README.md) plans architectures → mixture of experts → MHA/MQA/GQA → RoPE → context and KV caching → sampling → response drafting.
+
+```text
+src/
+  preprocessing/ embeddings/ baselines/ transformer/  # Lecture 1 models
+  llm/                                                # Lecture 2 packages (planned)
+    architectures/ moe/ attention/ positional_encoding/
+    context/ sampling/ inference/
+  training/ evaluation/ inference/                    # Existing shared workflows
+configs/
+  transformer/ llm/                                   # Lecture-specific settings
+  *.json                                              # Existing locked splits and examples
+docs/
+  lecture_01_transformers/ lecture_02_llm/
+tests/
+  transformer/ llm/                                   # New phase tests live here
+  test_*.py                                           # Existing Lecture 1 tests
+```
+
+Existing module paths and split manifests remain where they are so current training commands, imports, and CI continue to work. Lecture 2's folders are a roadmap, not a claim that LLM response generation is available. A later training lecture can build on these packages after the generation exercises are validated.
 
 ## Run locally
 
